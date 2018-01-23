@@ -11,10 +11,12 @@ Please Log In
 {% endblock %}
 
 {% block content %}
-	<div class="signin">
+	<form method="POST" action="/welcome.html">
 		{{ form.hidden_tag() }}
-		{{ wtf.form_field(form.username) }}
-		{{ wtf.form_field(form.password) }}
-		<button type="submit">Submit</button>
-	</div>
+		<div class="signin">
+			{{ wtf.form_field(form.username) }}
+			{{ wtf.form_field(form.password) }}
+			{{ form.submit() }}
+		</div>
+	</form>
 {% endblock %}
