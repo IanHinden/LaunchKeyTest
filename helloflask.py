@@ -18,14 +18,15 @@ class LoginForm(FlaskForm):
 def index():
 	form = LoginForm()
 	
-	if form.validate_on_submit():
-		return '<h1>' + 'Welcome, ' + form.username.data + '.' + '</h1>'
-	
 	return render_template("index.html", form=form)
 	
 @app.route("/welcome.html", methods=["POST"])
 def welcome():
-	return render_template('/welcome.html')
 
+	form = LoginForm()
+
+	if form.validate_on_submit():
+		return '<h1>' + 'Welcome, ' + form.username.data + '.' + '</h1>'
+	
 if __name__ == "__main__":
     app.run()
