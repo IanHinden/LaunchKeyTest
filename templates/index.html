@@ -1,7 +1,20 @@
-<!DOCTYPE HTML>
+{% extends "bootstrap/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
 
-<html>
-	<body>
-		<p>Test</p>
-	</body>
-</html>
+{% block title %}
+Please Log In
+{% endblock %}
+
+{% block styles %}
+{{super()}}
+<link rel="stylesheet" href="{{url_for('.static', filename='styles.css')}}">
+{% endblock %}
+
+{% block content %}
+	<div class="signin">
+		{{ form.hidden_tag() }}
+		{{ wtf.form_field(form.username) }}
+		{{ wtf.form_field(form.password) }}
+		<button type="submit">Submit</button>
+	</div>
+{% endblock %}
