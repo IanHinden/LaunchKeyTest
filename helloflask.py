@@ -4,6 +4,7 @@ from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import InputRequired, Email, Length
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
+from launchkey.factories import ServiceFactory, DirectoryFactory, OrganizationFactory
 
 app = Flask(__name__)
 bootstrap = Bootstrap(app)
@@ -11,6 +12,17 @@ app.debug = True
 app.config['SECRET_KEY'] = "Welcometolaunchkey"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite://///Users/ianhinden/Documents/Programming/LaunchKeyTest/LaunchKeyTest/database.db'
 db = SQLAlchemy(app)
+
+organization_id = "9eb44784-ffb6-11e7-beac-32c85991b6e3"
+organization_private_key = open('organization_private_key.key').read()
+directory_id = "8d8bc0e2-015d-11e8-9daa-16cd5ddd3780"
+service_id = "df4d2d1a-ffb6-11e7-a5f3-4697f50c1dd9"
+service_private_key = open('service_private_key.key').read()
+
+service_factory = ServiceFactory(service_id, service_private_key)
+organization_factory = OrganizationFactory(organization_id, organization_private_key)
+directory_client = organization_factory.make_directory_client(directory_id)
+service_client = organization_factory.make_service_client(service_id)
 
 class User(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
