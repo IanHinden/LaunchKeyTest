@@ -4,3 +4,5 @@ bin
 lib
 include
 *.py[cod]
+service_private_key.key
+organization_private_key.key
