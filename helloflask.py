@@ -34,7 +34,7 @@ class User(db.Model):
 
 class LoginForm(FlaskForm):
 	username = StringField("username", validators=[InputRequired(), Length(min=4, max=15)])
-	password = PasswordField("password", validators=[InputRequired(), Length(min=8)])
+	#password = PasswordField("password", validators=[InputRequired(), Length(min=8)])
 	submit = SubmitField('Sign In')
 
 @app.route("/", methods=['GET', 'POST'])
@@ -49,11 +49,15 @@ def welcome():
 	form = LoginForm()
 
 	if form.validate_on_submit():
-		user = User.query.filter_by(username=form.username.data).first()
-		if user:
-			if user.password == form.password.data:
-				return '<h1>' + 'Welcome, ' + form.username.data + '.' + '</h1>'
-		return '<h1>Invalid username or password</h1>'
+		user = "IanHinden"#User.query.filter_by(username=form.username.data).first()
+		#if user:
+			#if user.password == form.password.data:
+				#return '<h1>' + 'Welcome, ' + form.username.data + '.' + '</h1>'
+		link_data = directory_client.link_device(user)
+		linking_code = link_data.code
+		qr_url = link_data.qrcode
+		return "Scan the QR code at this URL to link your device: " + qr_url
+		#return '<h1>Invalid username or password</h1>'
 	
 if __name__ == "__main__":
     app.run()
