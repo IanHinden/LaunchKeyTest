@@ -5,6 +5,8 @@ from wtforms.validators import InputRequired, Email, Length
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 from launchkey.factories import ServiceFactory, DirectoryFactory, OrganizationFactory
+from launchkey.exceptions import RequestTimedOut
+from time import sleep
 
 app = Flask(__name__)
 bootstrap = Bootstrap(app)
@@ -50,9 +52,25 @@ def welcome():
 
 	if form.validate_on_submit():
 		user = "IanHinden"#User.query.filter_by(username=form.username.data).first()
-		#if user:
+		if user:
 			#if user.password == form.password.data:
 				#return '<h1>' + 'Welcome, ' + form.username.data + '.' + '</h1>'
+			auth_request_id = service_client.authorize(user)
+			if auth_request_id:
+				response = None
+				try:
+					while response is None:
+						response = service.client.get_authorization_response(auth_request_id)
+						if response is not None:
+							if response.authorized is True:
+								service_client.session_start(user, auth_request_id)
+								return 'Authorization Accepted'
+							else:
+								return 'Authorization Denied'
+						else:
+							sleep(1)
+				except RequestTimedOut:
+					return 'Timed Out. Please try again.'
 		link_data = directory_client.link_device(user)
 		linking_code = link_data.code
 		qr_url = link_data.qrcode
